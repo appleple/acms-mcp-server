@@ -1,0 +1,29 @@
+{
+  "name": "V2_Media_Banner",
+  "description": "メディアバナーを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、設定されたメディアバナー（画像バナーやHTMLソース）を取得・表示できます。画像バナーとHTMLソースバナーの2種類に対応しています。",
+  "snippet": "{% set mediaBanner = module('V2_Media_Banner', '') %}\n\n{% if mediaBanner.items is not empty %}\n  <div>\n    {{ include('/admin/module/setting.twig', { moduleInfo: mediaBanner.moduleInfo }) }}\n    <ul class=\"acms-list-nostyle acms-cssgrid acms-g-cols-1 acms-g-cols-md-3\">\n      {% for banner in mediaBanner.items %}\n        {% if banner.type == 'source' %}\n          <li>{{ banner.src|safe_html }}</li>\n        {% endif %}\n        {% if banner.type == 'image' %}\n          <li {{ banner.attr1|safe_html }}>\n            <a href=\"{{ banner.link }}\" target=\"{{ banner.target }}\">\n              <img\n                src=\"{{ banner.path|resizeImg(310) }}\"\n                width=\"{{ banner.width }}\"\n                height=\"{{ banner.height}}\"\n                class=\"acms-img-responsive\"\n                alt=\"{{ banner.alt }}\"\n                loading=\"lazy\"\n                decoding=\"async\"\n              />\n            </a>\n          </li>\n        {% endif %}\n      {% endfor %}\n    </ul>\n  </div>\n{% endif %}",
+  "parameters": {},
+  "variables": {
+    "mediaBanner.moduleInfo": "モジュール情報（設定画面用）",
+    "mediaBanner.items": "バナーの配列",
+    "banner.type": "バナーのタイプ（'source' または 'image'）",
+    "banner.src": "HTMLソースバナーのソースコード（type='source'の場合）",
+    "banner.path": "画像バナーのパス（type='image'の場合）",
+    "banner.width": "画像バナーの幅（type='image'の場合）",
+    "banner.height": "画像バナーの高さ（type='image'の場合）",
+    "banner.alt": "画像バナーの代替テキスト（type='image'の場合）",
+    "banner.link": "画像バナーのリンクURL（type='image'の場合）",
+    "banner.target": "画像バナーのリンクターゲット（type='image'の場合）",
+    "banner.attr1": "画像バナーの追加属性（type='image'の場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Media_Banner'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。空文字列の場合は現在のモジュールのバナーを取得します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "このモジュールはパラメータを必要としません",
+    "banner.type でバナーのタイプを判定し、'source' の場合はHTMLソースを、'image' の場合は画像を表示します",
+    "banner.src は safe_html フィルターを使用してHTMLとして安全に表示します",
+    "banner.attr1 は safe_html フィルターを使用してHTML属性として安全に表示します",
+    "画像バナーの場合、banner.link でリンクURLを、banner.target でリンクターゲット（_blank など）を指定できます"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "V2_CalendarYear",
+  "description": "年次カレンダー形式でエントリーを表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するエントリーを年次カレンダー形式で取得・表示できます。12ヶ月分のカレンダーを表示し、各日にエントリーがある場合はリンクを表示します。前年・来年へのナビゲーションも提供します。",
+  "snippet": "{% set calendar = module('V2_CalendarYear', null, { bid: null, cid: null, start: null }) %}\n\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: calendar.moduleInfo }) }}\n  <div>\n    {% if calendar.date %}\n    <div>\n      <h3 class=\"acms-text-center\">{{ calendar.date.year }}年</h3>\n      <ul class=\"acms-text-center acms-list-inline\">\n        <li><a href=\"{{ calendar.date.prevUrl }}calendar.html\" class=\"acms-btn-flat\" title=\"前年へ\">«</a></li>\n        <li>{{ calendar.date.year }}</li>\n        <li><a href=\"{{ calendar.date.nextUrl }}calendar.html\" class=\"acms-btn-flat\" title=\"来年へ\">»</a></li>\n      </ul>\n    </div>\n    {% endif %}\n\n    {% for month in calendar.year %}\n      {% if loop.index0 % 3 == 0 %}\n      <div>\n      {% endif %}\n        <h4>{{ month.label }}月</h4>\n        <table class=\"acms-table acms-table-bordered\">\n        <thead>\n          <tr class=\"acms-text-center\">\n            {% for week in calendar.weekLabels %}\n            <td >{{ week.label }}</td>\n            {% endfor %}\n          </tr>\n        </thead>\n        <tbody>\n          {% for week in month.weeks %}\n          <tr class=\"acms-text-center\">\n            {% for day in week %}\n            <td>\n              {% if day.entries %}\n              <a href=\"{{ day.url }}\">{{ day.day }}</a>\n              {% else %}\n              {{ day.day }}\n              {% endif %}\n            </td>\n            {% endfor %}\n          </tr>\n          {% endfor %}\n        </tbody>\n        </table>\n      {% if loop.index0 % 3 == 2 or loop.last %}\n      </div>\n      {% endif %}\n    {% endfor %}\n  </div>\n</div>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "start": {
+      "description": "開始日（YYYY-MM-DD形式、nullの場合は現在の年）",
+      "example": "start: '2024-01-01'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "calendar.moduleInfo": "モジュール情報（設定画面用）",
+    "calendar.date": "カレンダーの日付情報",
+    "calendar.date.year": "年",
+    "calendar.date.prevUrl": "前年のURL",
+    "calendar.date.nextUrl": "来年のURL",
+    "calendar.weekLabels": "週のラベル（日、月、火など）の配列",
+    "calendar.weekLabels[].label": "週のラベル（日、月、火など）",
+    "calendar.year": "月の配列（12ヶ月分）",
+    "month.label": "月のラベル（1月、2月など）",
+    "month.weeks": "その月の週の配列（カレンダーの各行）",
+    "week": "週の配列（日付の配列）",
+    "day.day": "日付（日）",
+    "day.url": "その日のエントリー一覧のURL（エントリーがある場合）",
+    "day.entries": "その日のエントリーの配列（存在する場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_CalendarYear'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'calendar-year'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "カレンダーは年次形式で表示され、12ヶ月分のカレンダーが表示されます",
+    "loop.index0 % 3 == 0 で3列ずつに分けて表示します（0, 3, 6, 9月目で新しい行を開始）",
+    "loop.index0 % 3 == 2 or loop.last で3列目または最後の月で行を閉じます",
+    "calendar.date.prevUrl と calendar.date.nextUrl で前年・来年へのナビゲーションを実装できます",
+    "day.entries が存在する場合、その日にエントリーがあります",
+    "start パラメータが null の場合は、現在の年のカレンダーが表示されます"
+  ]
+}
+

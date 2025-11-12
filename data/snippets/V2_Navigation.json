@@ -1,0 +1,31 @@
+{
+  "name": "V2_Navigation",
+  "description": "ナビゲーションメニューを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、設定されたナビゲーションメニューを階層構造で取得・表示できます。マクロを使用して再帰的にナビゲーションを表示し、親子関係を保持した構造で表示できます。",
+  "snippet": "{% set navigation = module('V2_Navigation', '') %}\n\n{% macro renderNavigation(navigation) %}\n<ul>\n  {% for item in navigation %}\n  <li {{ item.attr|safe_html }} data-depth=\"c_{{ item.depth }}\" >\n    <a href=\"{{ item.url }}\" {{ item.attr2|safe_html }} target=\"{{ item.target }}\">{{ item.label }}</a>\n    {% if item.children is defined %}\n      {{ _self.renderNavigation(item.children) }}\n    {% endif %}\n  </li>\n  {% endfor %}\n</ul>\n{% endmacro %}\n\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: navigation.moduleInfo }) }}\n  <nav class=\"acms-navbar acms-margin-bottom-medium clearfix\">\n    {{ _self.renderNavigation(navigation.items) }}\n  </nav>\n</div>",
+  "parameters": {},
+  "variables": {
+    "navigation.moduleInfo": "モジュール情報（設定画面用）",
+    "navigation.items": "ナビゲーション項目の配列（階層構造）",
+    "item.label": "ナビゲーション項目のラベル（表示テキスト）",
+    "item.url": "ナビゲーション項目のURL",
+    "item.target": "ナビゲーション項目のリンクターゲット（_blank など）",
+    "item.depth": "ナビゲーション項目の階層深度",
+    "item.attr": "ナビゲーション項目の追加属性（li要素用）",
+    "item.attr2": "ナビゲーション項目の追加属性（a要素用）",
+    "item.children": "子ナビゲーション項目の配列（存在する場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Navigation'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。空文字列の場合は現在のモジュールのナビゲーションを取得します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "このモジュールはパラメータを必要としません",
+    "ナビゲーションは階層構造（ツリー）で取得され、親子関係が保持されます",
+    "マクロ（macro）を使用して再帰的にナビゲーションを表示します",
+    "item.children が定義されている場合、子ナビゲーション項目が存在します",
+    "_self.renderNavigation() でマクロを再帰的に呼び出し、階層構造を表示します",
+    "item.attr と item.attr2 は safe_html フィルターを使用してHTML属性として安全に表示します",
+    "item.depth でナビゲーション項目の階層深度を取得でき、data-depth 属性として設定できます",
+    "item.target でリンクターゲット（_blank など）を指定できます"
+  ]
+}
+

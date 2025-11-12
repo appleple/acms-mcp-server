@@ -1,0 +1,40 @@
+{
+  "name": "V2_Blog_ChildList",
+  "description": "ブログの子ブログ一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定したブログの子ブログ（サブブログ）の一覧を取得・表示できます。ブログ名とURLを含むリスト形式のレイアウトに対応しています。",
+  "snippet": "{% set blogChildList = module('V2_Blog_ChildList', null, {\n  bid: null,\n  keyword: null,\n  field: null,\n}) %}\n\n{% if blogChildList.items is not empty %}\n  <ul class=\"acms-list-group\">\n    {{ include('/admin/module/setting.twig', { moduleInfo: blogChildList.moduleInfo }) }}\n    {% for item in blogChildList.items %}\n      <li>\n        <a href=\"{{ item.url }}\" class=\"acms-list-group-item\">{{ item.name }}</a>\n      </li>\n    {% endfor %}\n  </ul>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "blogChildList.moduleInfo": "モジュール情報（設定画面用）",
+    "blogChildList.items": "子ブログの配列",
+    "item.name": "ブログ名（表示テキスト）",
+    "item.url": "ブログのURL"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Blog_ChildList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'blog-child-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "このモジュールは、指定したブログの子ブログ（サブブログ）の一覧を取得します",
+    "bid が null の場合は、現在のブログの子ブログを取得します",
+    "キーワード検索やカスタムフィールドで絞り込むことができます",
+    "ブログの階層構造を表示する際に使用できます"
+  ]
+}
+

@@ -1,0 +1,43 @@
+{
+  "name": "V2_Schedule",
+  "description": "スケジュール形式でカレンダーを表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するスケジュール情報をカレンダー形式で取得・表示できます。月次カレンダーを表示し、各日にスケジュール情報（クラス、ラベル、テキスト）を表示します。前月・次月へのナビゲーションも提供します。",
+  "snippet": "{% set calendar = module('V2_Schedule', '', { start: null }) %}\n\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: calendar.moduleInfo }) }}\n\n  <div>\n    {% if calendar.date %}\n    <div>\n      <h3 class=\"acms-text-center\"><a href=\"{{ BASE_URL }}calendar.html/{{ calendar.date.year }}/{{ calendar.date.month }}\">{{ calendar.date.month }}月</a></h3>\n      <ul class=\"acms-text-center acms-list-inline\">\n        <li><a href=\"{{ BASE_URL }}calendar.html/{{ calendar.date.prevDate }}\" class=\"acms-btn-flat\" title=\"前月へ\">«</a></li>\n        <li>{{ calendar.date.year }}/{{ calendar.date.month }}</li>\n        <li><a href=\"{{ BASE_URL }}calendar.html/{{ calendar.date.nextDate }}\" class=\"acms-btn-flat\" title=\"次月へ\">»</a></li>\n      </ul>\n    </div>\n    {% endif %}\n    <table class=\"acms-table acms-table-bordered\">\n    <thead>\n      <tr class=\"acms-text-center\">\n        {% for week in calendar.weekLabels %}\n        <td >{{ week.label }}</td>\n        {% endfor %}\n      </tr>\n    </thead>\n    <tbody>\n      {% for week in calendar.weeks %}\n      <tr class=\"acms-text-center\">\n        {% for day in week %}\n        <td class=\"{{ day.data.class }}\">\n          <p>{{ day.day }}<p>\n          <p>{{ day.data.label}}</p>\n          <p>{{ day.data.text}}</p>\n        </td>\n        {% endfor %}\n      </tr>\n      {% endfor %}\n    </tbody>\n    </table>\n  </div>\n</div>\n\n{# {% for i in 1..12 %}\n  {% set loopMonth = '%02d'|format(i) %}\n  {% set loopStart = Y ~ '-' ~ loopMonth ~ '-01' %}\n  ...\n{% endfor %} #}",
+  "parameters": {
+    "start": {
+      "description": "開始日（YYYY-MM-DD形式、nullの場合は現在の月）",
+      "example": "start: '2024-01-01'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "calendar.moduleInfo": "モジュール情報（設定画面用）",
+    "calendar.date": "カレンダーの日付情報",
+    "calendar.date.year": "年",
+    "calendar.date.month": "月",
+    "calendar.date.prevDate": "前月の日付（YYYY-MM形式）",
+    "calendar.date.nextDate": "次月の日付（YYYY-MM形式）",
+    "calendar.weekLabels": "週のラベル（日、月、火など）の配列",
+    "calendar.weekLabels[].label": "週のラベル（日、月、火など）",
+    "calendar.weeks": "週の配列（カレンダーの各行）",
+    "week": "週の配列（日付の配列）",
+    "day.day": "日付（日）",
+    "day.data.class": "その日のCSSクラス（スケジュールの種類など）",
+    "day.data.label": "その日のラベル（スケジュールのラベル）",
+    "day.data.text": "その日のテキスト（スケジュールの説明など）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Schedule'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。空文字列の場合は現在のモジュールのスケジュールを取得します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "カレンダーは月次形式で表示され、各日にスケジュール情報が表示されます",
+    "day.data.class でその日のCSSクラスを設定できます（例: 休日、イベント日など）",
+    "day.data.label と day.data.text でその日のスケジュール情報を表示できます",
+    "calendar.date.prevDate と calendar.date.nextDate で前月・次月へのナビゲーションを実装できます",
+    "BASE_URL はa-blog cmsの定数です",
+    "start パラメータが null の場合は、現在の月のカレンダーが表示されます",
+    "コメントアウトされている部分は、12ヶ月分のカレンダーを生成する例です"
+  ]
+}
+

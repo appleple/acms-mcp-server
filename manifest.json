@@ -3,12 +3,12 @@
   "name": "acms-mcp-server",
   "namespace": "acms",
   "display_name": "a-blog cms MCP Server",
-  "version": "1.0.0",
-  "description": "a-blog cmsの情報検索とデータ取得のためのMCP（Model Context Protocol）サーバーです。a-blog CMSのキーワード検索、詳細情報の取得、モジュールID情報の取得などができます。a-blog cmsに登録されているコンテンツの調べ物、情報収集、データ確認などに使用してください。",
+  "version": "0.1.0-beta.1",
+  "description": "a-blog cmsの情報検索とデータ取得のためのMCP（Model Context Protocol）サーバーです。a-blog cmsのキーワード検索、詳細情報の取得、モジュールID情報の取得などができます。a-blog cmsに登録されているコンテンツの調べ物、情報収集、データ確認などに使用してください。",
   "icon": "icon.png",
   "author": {
-    "name": "atsu666",
-    "url": "https://github.com/atsu666"
+    "name": "appleple",
+    "url": "https://github.com/appleple"
   },
   "server": {
     "type": "node",
@@ -36,7 +36,15 @@
     },
     {
       "name": "acms_modules",
-      "description": "a-blog cms で利用可能なモジュールの一覧を取得します。利用可能なモジュール機能を確認できます。a-blog cms のテンプレートの編集・作成に使用してください。"
+      "description": "a-blog cms で利用可能なモジュールの一覧を取得します。利用可能なモジュール機能を確認できます。a-blog cms のテンプレートの編集・作成に使用してください。レスポンスに含まれるidentifierフィールドの値は、acms_get_module_detailのmoduleIdパラメータとして使用できます。"
+    },
+    {
+      "name": "acms_get_snippet",
+      "description": "a-blog cmsのモジュールのスニペット（テンプレートコード例）を取得します。V2_Entry_Summary、V2_Entry_Body、V2_Category_TreeなどのV2モジュールのTwigテンプレートコード、パラメータ、変数の使用例を参照できます。テンプレート実装時に使用してください。重要: module()関数は module('モジュール名', 'モジュールID', {パラメータ}) の形式です。第1引数はモジュール名（例: V2_Entry_Summary）、第2引数はモジュールID（acms_modulesで取得したidentifier、例: test2）です。acms_get_module_detailと組み合わせて使用することで、完全なコード生成が可能になります。"
+    },
+    {
+      "name": "acms_get_module_detail",
+      "description": "a-blog cmsのAPIからモジュールの詳細情報（変数、パラメータ、設定項目など）を取得します。スニペットに含まれていない変数や詳細なパラメータ情報も含まれます。acms_get_snippetと組み合わせて使用することで、完全なコード生成が可能になります。moduleIdには、acms_modulesで取得した一覧のidentifierフィールドの値を使用してください。"
     }
   ],
   "user_config": {

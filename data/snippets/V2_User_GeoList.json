@@ -1,0 +1,59 @@
+{
+  "name": "V2_User_GeoList",
+  "description": "位置情報（ジオロケーション）に基づいてユーザーの一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在位置から近い順にユーザーを取得・表示できます。ユーザー名、アイコン、距離を含むサマリー形式のレイアウトに対応しています。",
+  "snippet": "{% set userGeoList = module('V2_User_GeoList', null, {\n  bid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  field: null,\n}) %}\n\n{% if userGeoList.items is not empty %}\n<div class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: userGeoList.moduleInfo }) }}\n\n  {% for item in userGeoList.items %}\n  <div class=\"acms-summary\">\n    {% if item.icon %}\n    <div class=\"acms-summary-image\">\n      <img src=\"{{ item.icon }}\" alt=\"{{ item.name }}\" width=\"60\" />\n    </div>\n    {% endif %}\n    <div class=\"acms-summary-body\">\n      <h4 class=\"acms-summary-heading\">{{ item.name }}</h4>\n      <p>{{ item.geo.distance | number_format }}m</p>\n    </div>\n  </div>\n  {% endfor %}\n\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pagination: userGeoList.pagination,\n    })\n  }}\n</div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "userGeoList.moduleInfo": "モジュール情報（設定画面用）",
+    "userGeoList.items": "ユーザーの配列（距離順にソート）",
+    "userGeoList.pagination": "ページネーション情報",
+    "item.name": "ユーザー名",
+    "item.icon": "ユーザーアイコンのパス（存在する場合）",
+    "item.geo.distance": "現在位置からの距離（メートル単位）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_User_GeoList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'user-geo-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "このモジュールは位置情報（ジオロケーション）に基づいてユーザーを取得します",
+    "item.geo.distance は現在位置からの距離（メートル単位）で、number_format フィルターで数値フォーマットできます",
+    "ユーザーは距離の近い順にソートされます",
+    "ブラウザの位置情報APIを使用するため、HTTPS環境またはlocalhostでのみ動作します",
+    "ユーザーに位置情報が設定されている場合のみ取得されます",
+    "item.icon が存在する場合、ユーザーアイコンが表示されます"
+  ]
+}
+

@@ -1,0 +1,43 @@
+{
+  "name": "V2_Blog_GeoList",
+  "description": "位置情報（ジオロケーション）に基づいてブログの一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在位置から近い順にブログを取得・表示できます。ブログ名、距離を含むリスト形式のレイアウトに対応しています。",
+  "snippet": "{% set blogGeoList = module('V2_Blog_GeoList', null, {\n  bid: null,\n  keyword: null,\n  field: null,\n}) %}\n\n{% if blogGeoList.items is not empty %}\n  <ul class=\"acms-list-group\">\n    {{ include('/admin/module/setting.twig', { moduleInfo: blogChildList.moduleInfo }) }}\n    {% for item in blogGeoList.items %}\n      <li>\n        <a href=\"{{ item.url }}\" class=\"acms-list-group-item\">{{ item.name }}（{{ item.geo.distance | number_format }}m）</a>\n      </li>\n    {% endfor %}\n  </ul>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "blogGeoList.moduleInfo": "モジュール情報（設定画面用）",
+    "blogGeoList.items": "ブログの配列（距離順にソート）",
+    "item.name": "ブログ名",
+    "item.url": "ブログのURL",
+    "item.geo.distance": "現在位置からの距離（メートル単位）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Blog_GeoList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'blog-geo-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "このモジュールは位置情報（ジオロケーション）に基づいてブログを取得します",
+    "item.geo.distance は現在位置からの距離（メートル単位）で、number_format フィルターで数値フォーマットできます",
+    "ブログは距離の近い順にソートされます",
+    "ブラウザの位置情報APIを使用するため、HTTPS環境またはlocalhostでのみ動作します",
+    "ブログに位置情報が設定されている場合のみ取得されます",
+    "スニペット内の blogChildList.moduleInfo は blogGeoList.moduleInfo に修正してください（タイポ）"
+  ]
+}
+

@@ -1,0 +1,86 @@
+{
+  "name": "V2_Entry_Summary",
+  "description": "エントリーの一覧を表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するエントリーを一覧形式で取得・表示できます。メイン画像、タイトル、要約、詳細リンクを含むカード形式のレイアウトに対応しています。",
+  "snippet": "{% set entrySummary = module('V2_Entry_Summary', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  tag: [],\n  field: null,\n  order: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: entrySummary.moduleInfo }) }}\n  {% if entrySummary.items is empty %}\n  <p>ただいまページを準備しております。もうしばらくお待ちください。</p>\n  {% endif %}\n\n  <div class=\"acms-cssgrid acms-g-cols-1 acms-g-cols-md-3\">\n    {% for entry in entrySummary.items %}\n    <div>\n      {% if entry.mainImage.path %}\n      <img\n        src=\"{{ entry.mainImage.path|resizeImg(360) }}\"\n        alt=\"{{ entry.mainImage.alt }}\"\n        class=\"acms-img-responsive\"\n        width=\"{{ entry.mainImage.width }}\"\n        height=\"{{ entry.mainImage.height}}\"\n        loading=\"lazy\"\n        decoding=\"async\"\n      >\n      {% else %}\n      <img\n        src=\"/images/default/noimage.gif\"\n        alt=\"noimage\"\n        class=\"acms-img-responsive\"\n        width=\"360\"\n        height=\"360\"\n        loading=\"lazy\"\n        decoding=\"async\"\n      >\n      {% endif %}\n      <h3>{{ entry.title }}</h3>\n      <p>{{ entry.summary }}</p>\n      <p><a href=\"{{ entry.url }}\" class=\"acms-btn\">詳細をみる</a></p>\n    </div>\n    {% endfor %}\n  </div>\n\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pagination: entrySummary.pagination,\n    })\n  }}\n</div>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーIDで絞り込み",
+      "example": "eid: 123",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "order": {
+      "description": "並び順（例: 'datetime-desc', 'datetime-asc'）",
+      "example": "order: 'datetime-desc'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "entrySummary.moduleInfo": "モジュール情報（設定画面用）",
+    "entrySummary.items": "エントリーの配列",
+    "entrySummary.pagination": "ページネーション情報",
+    "entry.title": "エントリーのタイトル",
+    "entry.summary": "エントリーの要約",
+    "entry.url": "エントリーのURL",
+    "entry.mainImage.path": "メイン画像のパス",
+    "entry.mainImage.alt": "メイン画像の代替テキスト",
+    "entry.mainImage.width": "メイン画像の幅",
+    "entry.mainImage.height": "メイン画像の高さ"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_Summary'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。"
+  ]
+}

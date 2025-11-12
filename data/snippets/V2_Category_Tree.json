@@ -1,0 +1,63 @@
+{
+  "name": "V2_Category_Tree",
+  "description": "カテゴリーのツリー構造を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するカテゴリーを階層構造（ツリー）で取得・表示できます。マクロを使用して再帰的にカテゴリーを表示し、親子関係を保持した構造で表示できます。",
+  "snippet": "{% set categoryTree = module('V2_Category_Tree', null, {\n  bid: null,\n  cid: null,\n  keyword: null,\n  field: null,\n  order: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n{% if categoryTree.items is not empty %}\n  {% macro renderCategories(categories) %}\n    <ul class=\"acms-list-group\">\n      {% for category in categories %}\n        <li class=\"acms-list-group-item\">\n          <a href=\"{{ category.url }}\">\n            {{ category.name }}\n            {% if category.amount is not empty %}\n              <span class=\"acms-badge acms-float-right\">{{ category.amount }}</span>\n            {% endif %}\n          </a>\n          {% if category.children is defined %}\n            {{ _self.renderCategories(category.children) }}\n          {% endif %}\n        </li>\n      {% endfor %}\n    </ul>\n  {% endmacro %}\n\n  <div class=\"acms-margin-bottom-medium\">\n    {{ include('/admin/module/setting.twig', { moduleInfo: categoryTree.moduleInfo }) }}\n    {{ _self.renderCategories(categoryTree.items) }}\n  </div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "order": {
+      "description": "並び順（例: 'sort-asc', 'sort-desc'）",
+      "example": "order: 'sort-asc'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "categoryTree.moduleInfo": "モジュール情報（設定画面用）",
+    "categoryTree.items": "カテゴリーの配列（階層構造）",
+    "category.name": "カテゴリー名",
+    "category.url": "カテゴリーのURL",
+    "category.amount": "そのカテゴリーのエントリー数",
+    "category.children": "子カテゴリーの配列（存在する場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Category_Tree'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'category-tree'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "カテゴリーは階層構造（ツリー）で取得され、親子関係が保持されます",
+    "マクロ（macro）を使用して再帰的にカテゴリーを表示します",
+    "category.children が定義されている場合、子カテゴリーが存在します",
+    "_self.renderCategories() でマクロを再帰的に呼び出し、階層構造を表示します",
+    "category.amount でそのカテゴリーに属するエントリー数を表示できます"
+  ]
+}
+

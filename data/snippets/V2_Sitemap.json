@@ -1,0 +1,23 @@
+{
+  "name": "V2_Sitemap",
+  "description": "XMLサイトマップを生成するモジュール（V2版）です。Twigテンプレート形式で、サイトマップXML形式のデータを取得・生成できます。検索エンジン向けのサイトマップを自動生成し、URLと最終更新日時を含むXML形式で出力できます。",
+  "snippet": "{% set sitemap = module('V2_Sitemap', null) %}\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  {% for item in sitemap.items %}\n    <url>\n      <loc>{{ item.loc }}</loc>\n      {% if item.lastmod %}\n      <lastmod>{{ item.lastmod }}</lastmod>\n      {% endif %}\n    </url>\n  {% endfor %}\n</urlset>",
+  "parameters": {},
+  "variables": {
+    "sitemap.items": "サイトマップ項目の配列",
+    "item.loc": "URL（location）",
+    "item.lastmod": "最終更新日時（YYYY-MM-DD形式、存在する場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Sitemap'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。nullの場合は現在のサイトのサイトマップを生成します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "このモジュールはパラメータを必要としません",
+    "XMLサイトマップは、検索エンジンがサイトの構造を理解しやすくするための標準形式です",
+    "item.loc でURLを指定します（完全なURL形式）",
+    "item.lastmod が存在する場合、最終更新日時が含まれます（YYYY-MM-DD形式）",
+    "このテンプレートはXML形式で出力されるため、Content-Typeを text/xml または application/xml に設定する必要があります",
+    "サイトマップXMLは、検索エンジンにサイトの全ページを通知するために使用されます"
+  ]
+}
+

@@ -1,0 +1,41 @@
+{
+  "name": "V2_Topicpath",
+  "description": "トピックパス（パンくずリスト）を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在のページの階層構造をパンくずリスト形式で取得・表示できます。ブログ、カテゴリー、エントリーの階層を表示し、ユーザーの現在位置を明確に示します。",
+  "snippet": "{% set topicpath = module('V2_Topicpath', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n}) %}\n\n{% if topicpath.items is not empty %}\n  <div>\n    {{ include('/admin/module/setting.twig', { moduleInfo: topicpath.moduleInfo }) }}\n    <ol class=\"acms-topicpath acms-margin-bottom-mini clearfix\" aria-label=\"トピックパス\">\n      {% for item in topicpath.items %}\n        <li>\n          <a href=\"{{ item.url }}\">{{ item.name }}</a>\n        </li>\n      {% endfor %}\n    </ol>\n  </div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーID（nullの場合は現在のカテゴリー）",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーID（nullの場合は現在のエントリー）",
+      "example": "eid: 123",
+      "type": "integer|null"
+    }
+  },
+  "variables": {
+    "topicpath.moduleInfo": "モジュール情報（設定画面用）",
+    "topicpath.items": "トピックパス項目の配列（階層順）",
+    "item.name": "トピックパス項目の名前（表示テキスト）",
+    "item.url": "トピックパス項目のURL"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Topicpath'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'topicpath'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "トピックパスは、現在のページの階層構造を表示します（例: ホーム > ブログ > カテゴリー > エントリー）",
+    "パラメータが null の場合は、現在のページの階層が自動的に取得されます",
+    "ol 要素を使用することで、階層構造が明確になります",
+    "aria-label 属性でアクセシビリティを向上させています",
+    "トピックパスは、ユーザーがサイト内の現在位置を理解しやすくするための重要なナビゲーション要素です"
+  ]
+}
+

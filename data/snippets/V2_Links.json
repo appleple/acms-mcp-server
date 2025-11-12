@@ -1,0 +1,20 @@
+{
+  "name": "V2_Links",
+  "description": "リンクの一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、設定されたリンクの一覧を取得・表示できます。リンク名とURLを含むリスト形式のレイアウトに対応しています。",
+  "snippet": "{% set links = module('V2_Links', '') %}\n\n{% if links.items is not empty %}\n  <div class=\"acms-margin-bottom-medium\">\n    {{ include('/admin/module/setting.twig', { moduleInfo: links.moduleInfo }) }}\n    <ul class=\"acms-list-group\">\n      {% for link in links.items %}\n        <li>\n          <a href=\"{{ linl.url }}\" class=\"acms-list-group-item\">{{ link.name }}</a>\n        </li>\n      {% endfor %}\n    </ul>\n  </div>\n{% endif %}",
+  "parameters": {},
+  "variables": {
+    "links.moduleInfo": "モジュール情報（設定画面用）",
+    "links.items": "リンクの配列",
+    "link.name": "リンク名（表示テキスト）",
+    "link.url": "リンクのURL"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Links'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。空文字列の場合は現在のモジュールのリンクを取得します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "このモジュールはパラメータを必要としません",
+    "スニペット内の {{ linl.url }} は {{ link.url }} に修正してください（タイポ）"
+  ]
+}
+

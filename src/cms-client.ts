@@ -1,20 +1,27 @@
 /**
  * CMS API クライアント
- * a-blog CMSのGET APIを呼び出す共通関数
+ * a-blog cmsのGET APIを呼び出す共通関数
  */
 
 const ACMS_BASE = process.env.ACMS_BASE || '';
 const ACMS_X_API_KEY = process.env.ACMS_X_API_KEY || '';
 
 /**
+ * パラメータ形式のオプション
+ */
+export type ParamFormat = 'path' | 'query';
+
+/**
  * 共通GETクライアント
  * @param path APIパス
- * @param params クエリパラメータ
+ * @param params パラメータ
+ * @param paramFormat パラメータ形式（'path': /key/value形式、'query': クエリパラメータ形式）
  * @returns APIレスポンス（JSONまたは文字列）
  */
 export async function cmsGet(
   path: string,
-  params?: Record<string, string | number | boolean>
+  params?: Record<string, string | number | boolean>,
+  paramFormat: ParamFormat = 'path'
 ) {
   if (!ACMS_BASE) throw new Error('ACMS_BASE is not set');
 
@@ -22,21 +29,44 @@ export async function cmsGet(
   const apiPath =
     '/api/v2/' + path.replace(/^\/+/, '').replace(/\/+$/, '') + '/';
 
-  // /key/value 形式でパスを追加
   let urlPath = '';
+  let queryParams: URLSearchParams | null = null;
+
   if (params) {
-    const segments: string[] = [];
-    for (const [key, value] of Object.entries(params)) {
-      if (value === undefined || value === null || value === '') continue;
-      segments.push(encodeURIComponent(key), encodeURIComponent(String(value)));
+    if (paramFormat === 'query') {
+      // クエリパラメータ形式
+      queryParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+        if (value === undefined || value === null || value === '') continue;
+        queryParams.append(key, String(value));
+      }
+      urlPath = apiPath;
+    } else {
+      // /key/value 形式でパスを追加（デフォルト）
+      const segments: string[] = [];
+      for (const [key, value] of Object.entries(params)) {
+        if (value === undefined || value === null || value === '') continue;
+        segments.push(
+          encodeURIComponent(key),
+          encodeURIComponent(String(value))
+        );
+      }
+      if (segments.length > 0) urlPath += segments.join('/');
+      urlPath = `${urlPath}${apiPath}`;
     }
-    if (segments.length > 0) urlPath += segments.join('/');
+  } else {
+    urlPath = apiPath;
   }
-  urlPath = `${urlPath}${apiPath}`;
+
   urlPath = urlPath.replace(/^\/+/, '');
 
   // URLを作成
   const url = new URL(`${urlPath}`, ACMS_BASE);
+
+  // クエリパラメータがある場合は追加
+  if (queryParams && queryParams.toString()) {
+    url.search = queryParams.toString();
+  }
 
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   const res = await fetch(url, {

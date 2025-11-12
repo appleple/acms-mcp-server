@@ -1,0 +1,28 @@
+{
+  "name": "V2_Ogp",
+  "description": "OGP（Open Graph Protocol）メタタグを生成するモジュール（V2版）です。Twigテンプレート形式で、SNSでのシェア時に適切な情報を表示するためのOGPメタタグとTwitterカードメタタグを生成できます。タイトル、説明、画像などの情報を含むメタタグを自動生成します。",
+  "snippet": "{% set ogp = module('V2_Ogp', null) %}\n\n<meta charset=\"UTF-8\" />\n{% if touch('Touch_Entry') %}\n  <link rel=\"canonical\" href=\"{{ PERMALINK }}\" />\n{% endif %}\n<title>{{ ogp.title }}</title>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\" />\n<meta property=\"og:url\" content=\"{{ PERMALINK }}\" />\n<meta property=\"og:site_name\" content=\"{{ ROOT_BLOG_NAME }}\" />\n<meta property=\"og:title\" content=\"{{ ogp.title }}\" />\n<meta property=\"og:type\" content=\"{{ ogp.type }}\" />\n{% if ogp.description %}\n  <meta property=\"og:description\" content=\"{{ ogp.description|mb_trim(350, '...')|delnl }}\" />\n{% endif %}\n{% if ogp.image %}\n  <meta property=\"og:image\" content=\"{{ ogp.image }}\" />\n  <meta property=\"og:image:secure_url\" content=\"{{ ogp.image }}\" />\n  <meta property=\"og:image:width\" content=\"{{ ogp['image@x'] }}\" />\n  <meta property=\"og:image:height\" content=\"{{ ogp['image@y'] }}\" />\n{% endif %}\n{% if ogp.description %}\n  <meta name=\"description\" content=\"{{ ogp.description|mb_trim(350, '...')|delnl }}\" />\n{% endif %}\n{% if ogp.keywords %}\n  <meta name=\"keywords\" content=\"{{ ogp.keywords }}\" />\n{% endif %}\n<meta name=\"twitter:title\" content=\"{{ ogp.title }}\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<meta name=\"twitter:domain\" content=\"{{ DOMAIN }}\" />\n{% if ogp.image %}\n  <meta name=\"twitter:image\" content=\"{{ HTTP_MEDIA_ARCHIVES_DIR }}{{ ogp.image }}\" />\n{% endif %}",
+  "parameters": {},
+  "variables": {
+    "ogp.title": "ページのタイトル",
+    "ogp.type": "OGPタイプ（例: 'website', 'article'）",
+    "ogp.description": "ページの説明",
+    "ogp.image": "OGP画像のパス",
+    "ogp['image@x']": "OGP画像の幅",
+    "ogp['image@y']": "OGP画像の高さ",
+    "ogp.keywords": "ページのキーワード"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Ogp'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します。nullの場合は現在のページのOGP情報を取得します。acms_modulesで取得したidentifierフィールドの値を使用することもできます。",
+    "このモジュールはパラメータを必要としません",
+    "OGPメタタグは、Facebook、Twitter、LINEなどのSNSでシェアされた際に表示される情報を制御します",
+    "ogp.description は mb_trim(350, '...') フィルターで350文字に切り詰められます",
+    "ogp.image が存在する場合、OGP画像とTwitterカード画像が設定されます",
+    "ogp['image@x'] と ogp['image@y'] で画像のサイズを取得できます（配列記法を使用）",
+    "PERMALINK, ROOT_BLOG_NAME, DOMAIN, HTTP_MEDIA_ARCHIVES_DIR はa-blog cmsの定数です",
+    "touch('Touch_Entry') はエントリーページの場合にtrueを返します"
+  ]
+}
+

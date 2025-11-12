@@ -1,0 +1,20 @@
+{
+  "name": "V2_Field_Search",
+  "description": "検索フォームのカスタムフィールド値を取得するモジュール（V2版）です。Twigテンプレート形式で、検索フォームに送信されたカスタムフィールドの値を取得し、フォーム要素に反映できます。テキストフィールド、チェックボックス、セレクトボックスなどに対応しています。",
+  "snippet": "{% set fieldSearch = module('V2_Field_Search') %}\n\n<!-- テキストフィールド例 -->\n<input type=\"text\" name=\"hoge\" value=\"{{ fieldSearch.fields.hoge.value }}\" />\n\n<!-- チェックボックス例 -->\n<input type=\"checkbox\" name=\"hoge\" value=\"1\" {{ fieldSearch.fields.hoge.value|checked(1) }} />\n<input type=\"checkbox\" name=\"hoge\" value=\"2\" {{ fieldSearch.fields.hoge.value|checked(2) }} />\n<input type=\"checkbox\" name=\"hoge\" value=\"3\" {{ fieldSearch.fields.hoge.value|checked(3) }} />\n\n<!-- セレクトボックス例 -->\n<select name=\"hoge\">\n  <option value=\"aaa\" {{ fieldSearch.fields.hoge.value|selected('aaa') }}>\n    aaa\n  </option>\n  <option value=\"bbb\" {{ fieldSearch.fields.hoge.value|selected('bbb') }}>\n    bbb\n  </option>\n  <option value=\"ccc\" {{ fieldSearch.fields.hoge.value|selected('ccc') }}>\n    ccc\n  </option>\n</select>",
+  "parameters": {},
+  "variables": {
+    "fieldSearch.fields": "検索フォームのカスタムフィールドのオブジェクト",
+    "fieldSearch.fields.hoge.value": "フィールドの値（テキストフィールド、チェックボックス、セレクトボックスなど）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Field_Search'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "このモジュールはパラメータを必要としません",
+    "フィールド名（例: 'hoge'）は実際のカスタムフィールド名に置き換えてください",
+    "テキストフィールドでは value 属性に直接値を設定します",
+    "チェックボックスでは checked() フィルターを使用して、値が一致する場合に checked 属性を出力します",
+    "セレクトボックスでは selected() フィルターを使用して、値が一致する場合に selected 属性を出力します",
+    "検索フォームの送信後、入力された値が保持された状態でフォームを表示できます"
+  ]
+}

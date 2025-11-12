@@ -1,0 +1,25 @@
+{
+  "name": "V2_Entry_MoreContent",
+  "description": "エントリーの続きのコンテンツを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定したエントリーの「続きを読む」以降のコンテンツを取得・表示できます。エントリー詳細ページで、本文と続きのコンテンツを分けて表示する場合に使用できます。",
+  "snippet": "{% set entryContinue = module('V2_Entry_MoreContent', null, { eid: null }) %}\n\n{{ entryContinue.body|safe_html }}",
+  "parameters": {
+    "eid": {
+      "description": "エントリーID（nullの場合は現在のエントリー）",
+      "example": "eid: 135",
+      "type": "integer|null"
+    }
+  },
+  "variables": {
+    "entryContinue.body": "エントリーの続きのコンテンツ（safe_htmlフィルターでHTMLとして表示）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_MoreContent'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-more-content'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "entryContinue.body は safe_html フィルターを使用してHTMLとして安全に表示します",
+    "エントリーに「続きを読む」が設定されている場合、その後のコンテンツが取得されます",
+    "eid が null の場合は、現在表示中のエントリーの続きのコンテンツを取得します"
+  ]
+}

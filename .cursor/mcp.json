@@ -1,12 +1,3 @@
 {
-  "mcpServers": {
-    "acms": {
-      "command": "npx",
-      "args": ["-y", "acms-mcp-server"],
-      "env": {
-        "ACMS_BASE": "https://your-cms.example.com/api/",
-        "ACMS_X_API_KEY": "your-api-key-here"
-      }
-    }
-  }
+  "mcpServers": {}
 }

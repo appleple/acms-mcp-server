@@ -1,0 +1,29 @@
+{
+  "name": "V2_Form",
+  "description": "フォーム処理を行うモジュール（V2版）です。Twigテンプレート形式で、お問い合わせフォームなどの動的フォームを処理できます。入力、確認、送信、完了の各ステップを処理し、エラーハンドリングや連続投稿防止などの機能を提供します。",
+  "snippet": "{% set form = module('V2_Form') %}\n\n{% if form.error %}\n<!-- 全体エラー -->\n<p>入力内容をもう一度ご確認ください。</p>\n<p>フォームID : {{ form.error.formID }}</p>\n<p>エラー項目 : {{ form.error.fields | join('|') }}</p>\n{% endif %}\n\n{% if form.step == 'step' %}\n<!-- フォームステップ：初期 -->\n<form id=\"contactForm\" action=\"\" method=\"post\" enctype=\"multipart/form-data\" class=\"js-validator js-unload_alert\">\n\n  {{ include(\"/contact/form/input.twig\", form.fields) }}\n\n  <div>\n    <input type=\"hidden\" name=\"step\" value=\"confirm\">\n    <input type=\"hidden\" name=\"error\" value=\"reapply\">\n    <input type=\"hidden\" name=\"id\" value=\"contactForm\">\n\n    <button type=\"submit\" name=\"ACMS_POST_Form_Confirm\">\n      送信内容の確認へ\n    </button>\n  </div>\n</form>\n{% endif %}\n\n{% if form.step == 'reapply' %}\n<!-- フォームステップ：修正・エラー -->\n<form action=\"\" method=\"post\" enctype=\"multipart/form-data\" class=\"js-validator js-unload_alert\">\n\n  {{ include(\"/contact/form/input.twig\", form.fields) }}\n\n  <div>\n    <input type=\"hidden\" name=\"step\" value=\"confirm\">\n    <input type=\"hidden\" name=\"error\" value=\"reapply\">\n    <input type=\"hidden\" name=\"id\" value=\"contactForm\">\n\n    <button type=\"submit\" name=\"ACMS_POST_Form_Confirm\">\n      送信内容の確認へ\n    </button>\n  </div>\n</form>\n{% endif %}\n\n{% if form.step == 'confirm' %}\n<!-- フォームステップ：確認画面 -->\n<p>以下の内容で送信します。内容に誤りがないかよくご確認ください。</p>\n\n{{ include(\"/contact/form/confirm.twig\", form.fields) }}\n\n<div>\n  <form action=\"\" method=\"post\">\n    <input type=\"hidden\" name=\"step\" value=\"reapply\">\n    <input type=\"hidden\" name=\"takeover\" value=\"{{ form.fields.takeover }}\">\n\n    <button type=\"submit\" name=\"ACMS_POST_Form_Chain\">\n      入力内容を修正する\n    </button>\n  </form>\n\n  <form action=\"thanks.html\" method=\"post\" enctype=\"multipart/form-data\">\n    <input type=\"hidden\" name=\"To[]\" value=\"{{ form.fields.email.value }}\">\n    <input type=\"hidden\" name=\"AdminReply-To[]\" value=\"{{ form.fields.email.value }}\">\n    <input type=\"hidden\" name=\"AdminFrom[]\" value=\"{{ form.fields.email.value }}\">\n    <input type=\"hidden\" name=\"step\" value=\"result\">\n    <input type=\"hidden\" name=\"takeover\" value=\"{{ form.fields.takeover }}\">\n    <input type=\"hidden\" name=\"id\" value=\"contactForm\">\n    <button type=\"submit\" name=\"ACMS_POST_Form_Submit\">\n      送信する\n    </button>\n  </form>\n</div>\n{% endif %}\n\n{% if form.step == 'result' %}\n<!-- フォームステップ：完了画面 -->\n<p>入力内容を送信しました。お問い合わせいただきありがとうございました。</p>\n\n{{ include(\"/contact/form/confirm.twig\", form.fields) }}\n\n<p>\n  <a href=\"{{ HOME_URL }}\">トップページへ</a>\n</p>\n{% endif %}\n\n{% if form.step == 'forbidden' %}\n<p>不正なアクセスです。お手数ですがはじめからご入力ください。</p>\n\n<p>\n  <a href=\"{{ HOME_URL }}contact/\">\n    お問い合わせフォームへ戻る\n  </a>\n</p>\n{% endif %}\n\n{% if form.step == 'repeated' %}\n<p>連続投稿は禁止されています。入力された内容は正常に送信されました。送信内容は、登録されたメールアドレス宛にお送りした確認メールからご確認ください。</p>\n\n<p class=\"mt-8 text-center\">\n  <a href=\"{{ HOME_URL }}\">トップページへ</a>\n</p>\n{% endif %}",
+  "parameters": {},
+  "variables": {
+    "form.step": "フォームのステップ（'step', 'reapply', 'confirm', 'result', 'forbidden', 'repeated'）",
+    "form.fields": "フォームフィールドのオブジェクト",
+    "form.fields.takeover": "フォームデータの引き継ぎ用データ",
+    "form.fields.email.value": "メールアドレスフィールドの値（例）",
+    "form.error": "エラー情報（存在する場合）",
+    "form.error.formID": "エラーが発生したフォームID",
+    "form.error.fields": "エラーが発生したフィールドの配列"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Form'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "このモジュールはパラメータを必要としません",
+    "form.step で現在のフォームステップを判定し、適切な画面を表示します",
+    "フォームステップの種類: 'step'（初期入力）、'reapply'（修正・エラー）、'confirm'（確認）、'result'（完了）、'forbidden'（不正アクセス）、'repeated'（連続投稿）",
+    "form.fields でフォームフィールドにアクセスできます（例: form.fields.email.value）",
+    "form.fields.takeover でフォームデータを引き継ぎます（確認画面から修正画面へ戻る際など）",
+    "form.error が存在する場合、エラー情報が含まれます",
+    "ACMS_POST_Form_Confirm, ACMS_POST_Form_Chain, ACMS_POST_Form_Submit はa-blog cmsのフォーム処理用のボタン名です",
+    "include で別テンプレート（input.twig, confirm.twig）にフォームフィールドを渡して表示できます",
+    "HOME_URL はa-blog cmsの定数です"
+  ]
+}
+

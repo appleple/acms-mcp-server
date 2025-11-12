@@ -1,0 +1,103 @@
+{
+  "name": "V2_Entry_Body",
+  "description": "エントリーの本文を表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するエントリーの詳細情報（タイトル、本文、カテゴリー、タグ、カスタムフィールドなど）を取得・表示できます。エントリー詳細ページや一覧ページで使用できます。",
+  "snippet": "{% set entryBody = module('V2_Entry_Body', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  tag: [],\n  field: null,\n  order: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n<!-- 編集画面 -->\n{{ include('/admin/entry/edit.twig', { body: entryBody }) }}\n\n<!-- エントリー表示 -->\n{% if entryBody.pageType in ['entry', 'index'] %}\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: entryBody.moduleInfo }) }}\n  {% if entryBody.items is empty %}\n    <section class=\"entry\">\n      <h2 class=\"entry-title\">\n        Not Found\n      </h2>\n      <p>\n        お探しの記事は見つかりませんでした。\n      </p>\n    </section>\n  {% endif %}\n  {% for entry in entryBody.items %}\n    {% if entry.editorialInfo.revisionBtn %}\n      <div class=\"acms-form-group\">\n        {{ include('/admin/entry/revision-info.html') }}\n      </div>\n    {% endif %}\n    {% set className = VIEW != 'index' ? 'entry' : 'entry-index' %}\n    <article class=\"{{ className }}\">\n      <header class=\"entry-header\">\n        <!-- タイトル -->\n        <h2 class=\"entry-title\">\n          <a href=\"{{ entry.url }}\">{{ entry.title }}</a>\n        </h2>\n        <p class=\"entry-date\">\n          <!-- 日付 -->\n          <time datetime=\"{{ entry.datetime|date('Y-m-d') }}\">\n            {{ entry.datetime|date('Y年m月d日') }}（{{ entry.datetime|date('l')|weekEN2JP }}）\n          </time>\n          <!-- 新着ラベル -->\n          {% if entry.isNew %}\n            <span class=\"entry-new\">NEW</span>\n          {% endif %}\n        </p>\n        <ul class=\"entry-labels\">\n          <!-- カテゴリ -->\n          {% for category in entry.category.items %}\n            <li><a href=\"{{ category.url }}\" class=\"entry-category-label\">{{ category.name }}</a></li>\n          {% endfor %}\n          <!-- タグ -->\n          {% if entry.tags %}\n            {% for tag in entry.tags %}\n              <li><a href=\"{{ tag.url }}\" class=\"entry-tag-label\">#{{ tag.name }}</a></li>\n            {% endfor %}\n          {% endif %}\n        </ul>\n      </header>\n\n      <div>\n        <!-- カスタムフィールドの読み込み -->\n        {% if entry.fields is iterable %}\n          {{ include('/include/entry/field.twig', entry.fields) }}\n        {% endif %}\n        <!-- 本文 -->\n        {% if entry.body %}\n          <div class=\"acms-entry\">\n            <div>\n              {{ entry.body|raw }}\n            </div>\n          </div>\n        {% endif %}\n        <!-- 続きを読む -->\n        {% if entry.hasMoreUnits %}\n          <a href=\"{{ entry.url }}\" class=\"entry-continue-btn\">続きを読む</a>\n        {% endif %}\n        <!-- カスタムフィールドの読み込み -->\n        {% if entry.fields is iterable %}\n          {{ include('/include/entry/field_foot.twig', entry.fields) }}\n        {% endif %}\n      </div>\n      <!-- 動的フォーム -->\n      {% if entry.isFormVisible %}\n        {{ include('/include/form/unit.html') }}\n      {% endif %}\n      <!-- 編集ボタン -->\n      <div class=\"acms-box-medium\">\n        {{ include('admin/entry/action.twig', { entry }) }}\n      </div>\n\n      {% if touch('Touch_Entry') %}\n        <footer class=\"entry-footer\">\n          <div class=\"entry-info\">\n            {% if entry.datetime < entry.updatedDatetime %}\n              <p class=\"entry-udate-info\">\n                更新 {{ entry.updatedDatetime|date('Y/m/d H:i') }}\n              </p>\n            {% endif %}\n          </div>\n        </footer>\n      {% endif %}\n    </article>\n  {% endfor %}\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pager: entryBody.pager,\n      pagination: entryBody.pagination ?? entryBody.microPagination,\n      serialNavi: entryBody.serialNavi\n    })\n  }}\n</div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーIDで絞り込み",
+      "example": "eid: 123",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "order": {
+      "description": "並び順（例: 'datetime-desc', 'datetime-asc'）",
+      "example": "order: 'datetime-desc'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "entryBody.moduleInfo": "モジュール情報（設定画面用）",
+    "entryBody.pageType": "ページタイプ（'entry', 'index' など）",
+    "entryBody.items": "エントリーの配列",
+    "entryBody.pager": "ページャー情報",
+    "entryBody.pagination": "ページネーション情報",
+    "entryBody.microPagination": "マイクロページネーション情報",
+    "entryBody.serialNavi": "前後記事ナビゲーション情報",
+    "entry.title": "エントリーのタイトル",
+    "entry.url": "エントリーのURL",
+    "entry.datetime": "エントリーの公開日時",
+    "entry.updatedDatetime": "エントリーの更新日時",
+    "entry.isNew": "新着フラグ",
+    "entry.body": "エントリーの本文（rawフィルターでHTMLとして表示）",
+    "entry.hasMoreUnits": "続きがあるかどうかのフラグ",
+    "entry.fields": "カスタムフィールドのオブジェクト",
+    "entry.category.items": "カテゴリーの配列",
+    "entry.category.items[].name": "カテゴリー名",
+    "entry.category.items[].url": "カテゴリーのURL",
+    "entry.tags": "タグの配列",
+    "entry.tags[].name": "タグ名",
+    "entry.tags[].url": "タグのURL",
+    "entry.editorialInfo.revisionBtn": "リビジョン情報",
+    "entry.isFormVisible": "動的フォーム表示フラグ"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_Body'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-body'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "entryBody.pageType でページタイプを判定し、'entry' または 'index' の場合のみエントリーを表示します",
+    "entry.body は raw フィルターを使用してHTMLとして表示します",
+    "カスタムフィールドは entry.fields から取得し、include で別テンプレートに渡して表示できます",
+    "ページネーションには pagination または microPagination を使用できます（?? 演算子でフォールバック）"
+  ]
+}

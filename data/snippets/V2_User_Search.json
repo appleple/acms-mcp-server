@@ -1,0 +1,55 @@
+{
+  "name": "V2_User_Search",
+  "description": "ユーザーの検索・一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するユーザーを一覧形式で取得・表示できます。ユーザー名、アイコンを含むサマリー形式のレイアウトに対応しています。",
+  "snippet": "{% set userSearch = module('V2_User_Search', null, {\n  bid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  field: null\n}) %}\n\n{% if userSearch.items is not empty %}\n<div class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: userSearch.moduleInfo }) }}\n\n  {% for item in userSearch.items %}\n  <div class=\"acms-summary\">\n    {% if item.icon %}\n    <div class=\"acms-summary-image\">\n      <img src=\"{{ item.icon }}\" alt=\"{{ item.name }}\" width=\"60\" />\n    </div>\n    {% endif %}\n    <div class=\"acms-summary-body\">\n      <h4 class=\"acms-summary-heading\">{{ item.name }}</h4>\n    </div>\n  </div>\n  {% endfor %}\n\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pagination: userSearch.pagination,\n    })\n  }}\n</div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "userSearch.moduleInfo": "モジュール情報（設定画面用）",
+    "userSearch.items": "ユーザーの配列",
+    "userSearch.pagination": "ページネーション情報",
+    "item.name": "ユーザー名",
+    "item.icon": "ユーザーアイコンのパス（存在する場合）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_User_Search'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'user-search'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "ユーザーはキーワード検索やカスタムフィールドで絞り込むことができます",
+    "item.icon が存在する場合、ユーザーアイコンが表示されます",
+    "ページネーションに対応しており、大量のユーザーを効率的に表示できます"
+  ]
+}
+

@@ -1,0 +1,46 @@
+{
+  "name": "V2_Tag_Filter",
+  "description": "タグフィルターを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するタグをフィルター形式で取得・表示できます。選択されているタグと、さらに絞り込むためのタグ候補を表示できます。",
+  "snippet": "{% set tagFilter = module('V2_Tag_Filter', null, {\n  bid: null,\n  cid: null,\n  tag: TAG,\n  field: null,\n}) %}\n\n{% if tagFilter.choiceTags or tagFilter.selectedTags %}\n  <div>\n    {{ include('/admin/module/setting.twig', { moduleInfo: tagFilter.moduleInfo }) }}\n    {% if tagFilter.selectedTags %}\n    <h3>選択されているタグ</h3>\n    <ul class=\"acms-list-group\" aria-label=\"タグ候補\">\n      {% for tag in tagFilter.selectedTags %}\n        <li class=\"acms-list-group-item\">\n          <a href=\"{{ tag.url }}\">#{{ tag.name }}</a>\n        </li>\n      {% endfor %}\n    </ul>\n    {% endif %}\n\n    {% if tagFilter.choiceTags %}\n    <h3>タグを絞り込む</h3>\n    <ul class=\"acms-list-group\" aria-label=\"タグ候補\">\n      {% for tag in tagFilter.choiceTags %}\n        <li class=\"acms-list-group-item\">\n          <a href=\"{{ tag.url }}\">#{{ tag.name }}</a>\n        </li>\n      {% endfor %}\n    </ul>\n    {% endif %}\n  </div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "tag": {
+      "description": "タグ（TAG定数を使用すると現在選択されているタグ）",
+      "example": "tag: TAG",
+      "type": "string|array|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "tagFilter.moduleInfo": "モジュール情報（設定画面用）",
+    "tagFilter.selectedTags": "選択されているタグの配列",
+    "tagFilter.choiceTags": "タグ候補の配列（さらに絞り込むためのタグ）",
+    "tag.name": "タグ名",
+    "tag.url": "タグのURL"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Tag_Filter'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'tag-filter'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "tag パラメータに TAG 定数を指定すると、現在選択されているタグを基準にフィルターが動作します",
+    "tagFilter.selectedTags で現在選択されているタグの一覧を表示できます",
+    "tagFilter.choiceTags で、さらに絞り込むためのタグ候補を表示できます",
+    "タグフィルターは、複数のタグを組み合わせてエントリーを絞り込む機能を提供します",
+    "aria-label 属性でアクセシビリティを向上させています"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "V2_Category_GeoList",
+  "description": "位置情報（ジオロケーション）に基づいてカテゴリーの一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在位置から近い順にカテゴリーを取得・表示できます。カテゴリー名、距離を含むリスト形式のレイアウトに対応しています。",
+  "snippet": "{% set categoryGeoList = module('V2_Category_GeoList', null, {\n  bid: null,\n  cid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  field: null,\n}) %}\n\n{% if categoryGeoList.items is not empty %}\n<div class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: categoryGeoList.moduleInfo }) }}\n\n  {% for item in categoryGeoList.items %}\n  <div class=\"acms-summary\">\n    <div class=\"acms-summary-body\">\n      <h4 class=\"acms-summary-heading\">{{ item.name }}</h4>\n      <p>{{ item.geo.distance | number_format }}m</p>\n    </div>\n  </div>\n  {% endfor %}\n\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pagination: categoryGeoList.pagination,\n    })\n  }}\n</div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "categoryGeoList.moduleInfo": "モジュール情報（設定画面用）",
+    "categoryGeoList.items": "カテゴリーの配列（距離順にソート）",
+    "categoryGeoList.pagination": "ページネーション情報",
+    "item.name": "カテゴリー名",
+    "item.geo.distance": "現在位置からの距離（メートル単位）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Category_GeoList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'category-geo-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "このモジュールは位置情報（ジオロケーション）に基づいてカテゴリーを取得します",
+    "item.geo.distance は現在位置からの距離（メートル単位）で、number_format フィルターで数値フォーマットできます",
+    "カテゴリーは距離の近い順にソートされます",
+    "ブラウザの位置情報APIを使用するため、HTTPS環境またはlocalhostでのみ動作します",
+    "カテゴリーに位置情報が設定されている場合のみ取得されます"
+  ]
+}
+

@@ -13,7 +13,7 @@ export function registerFindTool(server: McpServer) {
     {
       title: 'Search and find information',
       description:
-        'a-blog cms に登録されているコンテンツをキーワードで検索します。記事、コンテンツ、データなどを検索できます。調べ物や情報収集に使用してください。結果には各項目の識別子（bidとeid）が含まれ、acms_get_entryで詳細を取得できます。',
+        'a-blog cms に登録されているコンテンツ（記事、エントリー）をキーワードで検索します。CMSに保存されている実際のコンテンツデータを検索・取得するためのツールです。テンプレートコードやスニペットを探す場合は、リソース（acms://module/snippets）を参照してください。',
       inputSchema: {
         keyword: z.string().optional(),
         page: z.number().int().positive().max(100).default(1),

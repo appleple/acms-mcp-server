@@ -1,0 +1,56 @@
+{
+  "name": "V2_Tag_Cloud",
+  "description": "タグクラウドを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するタグをクラウド形式で取得・表示できます。タグの使用頻度に応じてサイズを変えて表示でき、タグ名、URL、エントリー数を含むリスト形式のレイアウトに対応しています。",
+  "snippet": "{% set tagCloud = module('V2_Tag_Cloud', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n  field: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n{% if tagCloud.items is not empty %}\n  <div>\n    {{ include('/admin/module/setting.twig', { moduleInfo: tagCloud.moduleInfo }) }}\n    <ul class=\"acms-list-inline\" aria-label=\"タグクラウド\">\n      {% for tag in tagCloud.items %}\n        <li>\n          <span class=\"acms-label acms-label-success tagSize{{ tag.level }}\">\n            <a href=\"{{ tag.url }}\" title=\"{{ tag.amount }}件\">#{{ tag.name }}</a>\n          </span>\n        </li>\n      {% endfor %}\n    </ul>\n  </div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーIDで絞り込み",
+      "example": "eid: 123",
+      "type": "integer|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "tagCloud.moduleInfo": "モジュール情報（設定画面用）",
+    "tagCloud.items": "タグの配列",
+    "tag.name": "タグ名",
+    "tag.url": "タグのURL",
+    "tag.amount": "そのタグに属するエントリー数",
+    "tag.level": "タグのレベル（サイズレベル、1～5など）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Tag_Cloud'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'tag-cloud'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "タグは使用頻度に応じてレベル（level）が設定され、tagSize{{ tag.level }} というクラス名でスタイルを適用できます",
+    "tag.amount でそのタグに属するエントリー数を表示できます",
+    "タグクラウドは、よく使われるタグほど大きく表示されるように設計されています",
+    "aria-label 属性でアクセシビリティを向上させています"
+  ]
+}

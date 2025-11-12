@@ -1,0 +1,53 @@
+{
+  "name": "V2_Entry_ArchiveList",
+  "description": "エントリーのアーカイブリスト（月別アーカイブなど）を表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するエントリーを月別にグループ化して取得・表示できます。アーカイブページのサイドバーなどで使用できます。",
+  "snippet": "{% set entryArchiveList = module('V2_Entry_ArchiveList', null, { bid: null, cid: null, limit: null, keyword: null, tag: [], field: null }) %}\n\n<section class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: entryArchiveList.moduleInfo }) }}\n  <ul class=\"acms-list-group\">\n    {% for archive in entryArchiveList.items %}\n      <li>\n        <a href=\"{{ archive.url }}\" class=\"acms-list-group-item\">\n          {{ archive.date|date('Y年m月') }}\n          {% if archive.amount %}\n            <span class=\"acms-badge acms-float-right\">{{ archive.amount }}</span>\n          {% endif %}\n        </a>\n      </li>\n    {% endfor %}\n  </ul>\n</section>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 12",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "entryArchiveList.moduleInfo": "モジュール情報（設定画面用）",
+    "entryArchiveList.items": "アーカイブの配列",
+    "archive.url": "アーカイブページのURL",
+    "archive.date": "アーカイブの日付（dateフィルターでフォーマット可能）",
+    "archive.amount": "その月のエントリー数"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_ArchiveList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-archive-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "アーカイブは月別にグループ化され、各月のエントリー数が表示されます",
+    "archive.date は date フィルターを使用して任意の形式で表示できます（例: 'Y年m月', 'Y-m'）"
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "name": "V2_Entry_UnitList",
+  "description": "エントリーのユニット（コンテンツの単位）のリストを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するエントリーのユニット情報を取得・表示できます。ユニットの基本情報、タイプ別のコンテンツ、エントリー情報、カテゴリー情報、ブログ情報などを取得できます。",
+  "snippet": "{% set entryUnitList = module('V2_Entry_UnitList', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  tag: [],\n  field: null,\n  order: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n<div>\n  {{ include('/admin/module/setting.twig', { moduleInfo: entryUnitList.moduleInfo }) }}\n  {% for item in entryUnitList.items %}\n  <table class=\"acms-table acms-table-bordered acms-margin-bottom-medium\">\n    <tr>\n      <th>id</th>\n      <td>{{ item.unit.id }}</td>\n    </tr>\n    <tr>\n      <th>sort</th>\n      <td>{{ item.unit.sort }}</td>\n    </tr>\n    <tr>\n      <th>align</th>\n      <td>{{ item.unit.align }}</td>\n    </tr>\n    <tr>\n      <th>type</th>\n      <td>{{ item.unit.type }}</td>\n    </tr>\n    <tr>\n      <th>attr</th>\n      <td>{{ item.unit.attr }}</td>\n    </tr>\n    <tr>\n      <th>size</th>\n      <td>{{ item.unit.size }}</td>\n    </tr>\n    <tr>\n      <th>field_1</th>\n      <td>{{ item.unit.field_1 }}</td>\n    </tr>\n    <tr>\n      <th>field_2</th>\n      <td>{{ item.unit.field_2 }}</td>\n    </tr>\n    <tr>\n      <th>field_3</th>\n      <td>{{ item.unit.field_3 }}</td>\n    </tr>\n    <tr>\n      <th>field_4</th>\n      <td>{{ item.unit.field_4 }}</td>\n    </tr>\n    <tr>\n      <th>field_5</th>\n      <td>{{ item.unit.field_5 }}</td>\n    </tr>\n    <tr>\n      <th>field_6</th>\n      <td>{{ item.unit.field_6 }}</td>\n    </tr>\n    <tr>\n      <th>field_7</th>\n      <td>{{ item.unit.field_7 }}</td>\n    </tr>\n    <tr>\n      <th>field_8</th>\n      <td>{{ item.unit.field_8 }}</td>\n    </tr>\n    <tr>\n      <th>entry_id</th>\n      <td>{{ item.unit.entry_id }}</td>\n    </tr>\n    <tr>\n      <th>blog_id</th>\n      <td>{{ item.unit.blog_id }}</td>\n    </tr>\n    {% if item.normal %}\n    <tr>\n      <th>normal</th>\n      <td>\n        {{ item.normal }}\n      </td>\n    </tr>\n    {% endif %}\n    {% if item.large %}\n    <tr>\n      <th>large</th>\n      <td>\n        {{ item.large }}\n      </td>\n    </tr>\n    {% endif %}\n    {% if item.download %}\n    <tr>\n      <th>download</th>\n      <td>{{ item.download }}</td>\n    </tr>\n    {% endif %}\n    <tr>\n      <th>entry_title</th>\n      <td>{{ item.entry.title }}</td>\n    </tr>\n    <tr>\n      <th>entry_url</th>\n      <td>{{ item.entry.url }}</td>\n    </tr>\n    <tr>\n      <th>entry_datetime</th>\n      <td>{{ item.entry.datetime }}</td>\n    </tr>\n    {% if item.category.items %}\n    <tr>\n      <th>category_name</th>\n      <td>{{ item.category.items[0].name }}</td>\n    </tr>\n    <tr>\n      <th>category_url</th>\n      <td>{{ item.category.items[0].url }}</td>\n    </tr>\n    {% endif %}\n    <tr>\n      <th>blog_name</th>\n      <td>{{ item.blog.name }}</td>\n    </tr>\n    <tr>\n      <th>blog_url</th>\n      <td>{{ item.blog.url }}</td>\n    </tr>\n  </table>\n  {% endfor %}\n</div>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーIDで絞り込み",
+      "example": "eid: 123",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "order": {
+      "description": "並び順（例: 'datetime-desc', 'datetime-asc'）",
+      "example": "order: 'datetime-desc'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "entryUnitList.moduleInfo": "モジュール情報（設定画面用）",
+    "entryUnitList.items": "ユニットの配列",
+    "item.unit.id": "ユニットID",
+    "item.unit.sort": "ユニットの並び順",
+    "item.unit.align": "ユニットの配置",
+    "item.unit.type": "ユニットタイプ",
+    "item.unit.attr": "ユニットの属性",
+    "item.unit.size": "ユニットのサイズ",
+    "item.unit.field_1": "ユニットのフィールド1",
+    "item.unit.field_2": "ユニットのフィールド2",
+    "item.unit.field_3": "ユニットのフィールド3",
+    "item.unit.field_4": "ユニットのフィールド4",
+    "item.unit.field_5": "ユニットのフィールド5",
+    "item.unit.field_6": "ユニットのフィールド6",
+    "item.unit.field_7": "ユニットのフィールド7",
+    "item.unit.field_8": "ユニットのフィールド8",
+    "item.unit.entry_id": "エントリーID",
+    "item.unit.blog_id": "ブログID",
+    "item.normal": "通常タイプのユニットコンテンツ",
+    "item.large": "大サイズタイプのユニットコンテンツ",
+    "item.download": "ダウンロードタイプのユニットコンテンツ",
+    "item.entry.title": "エントリーのタイトル",
+    "item.entry.url": "エントリーのURL",
+    "item.entry.datetime": "エントリーの公開日時",
+    "item.category.items": "カテゴリーの配列",
+    "item.category.items[0].name": "カテゴリー名",
+    "item.category.items[0].url": "カテゴリーのURL",
+    "item.blog.name": "ブログ名",
+    "item.blog.url": "ブログのURL"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_UnitList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-unit-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "ユニットはエントリーのコンテンツの単位で、テキスト、画像、ファイルなど様々なタイプがあります",
+    "item.normal, item.large, item.download はユニットタイプによって存在しない場合があります",
+    "item.category.items は配列なので、最初の要素にアクセスする場合は items[0] を使用します"
+  ]
+}

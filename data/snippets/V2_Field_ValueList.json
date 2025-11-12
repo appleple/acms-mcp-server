@@ -1,0 +1,36 @@
+{
+  "name": "V2_Field_ValueList",
+  "description": "カスタムフィールドの値のリストを取得するモジュール（V2版）です。Twigテンプレート形式で、指定したカスタムフィールドに設定されている値の一覧を取得できます。セレクトボックスなどのフォーム要素の選択肢として使用できます。",
+  "snippet": "{% set fieldValueList = module('V2_Field_ValueList', null, {bid: null, limit: null, field: null}) %}\n\n<div class=\"acms-form acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: fieldValueList.moduleInfo }) }}\n  <select>\n    {% for item in fieldValueList.items %}\n      <option value=\"{{ item }}\">{{ item }}</option>\n    {% endfor %}\n  </select>\n</div>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 100",
+      "type": "integer|null"
+    },
+    "field": {
+      "description": "カスタムフィールド名（例: 'field_name'）",
+      "example": "field: 'category'",
+      "type": "string|null"
+    }
+  },
+  "variables": {
+    "fieldValueList.moduleInfo": "モジュール情報（設定画面用）",
+    "fieldValueList.items": "カスタムフィールドの値の配列"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Field_ValueList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'field-value-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "field パラメータで指定したカスタムフィールドに設定されている値の一覧を取得します",
+    "取得した値は items 配列に格納され、セレクトボックスなどの選択肢として使用できます",
+    "重複する値は自動的に除外されます"
+  ]
+}

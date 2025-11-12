@@ -1,0 +1,87 @@
+{
+  "name": "V2_Entry_GeoList",
+  "description": "位置情報（ジオロケーション）に基づいてエントリーの一覧を取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在位置から近い順にエントリーを取得・表示できます。メイン画像、タイトル、要約、距離、詳細リンクを含むカード形式のレイアウトに対応しています。",
+  "snippet": "{% set entryGeoList = module('V2_Entry_GeoList', null, {\n  bid: null,\n  cid: null,\n  eid: null,\n  uid: null,\n  page: PAGE,\n  limit: null,\n  keyword: null,\n  tag: [],\n  field: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n<div class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: entryGeoList.moduleInfo }) }}\n\n  {% if not entryGeoList.hasLocation %}\n    <p>現在位置を取得できませんでした。</p>\n  {% endif %}\n\n  {% if entryGeoList.hasLocation and entryGeoList.items is empty %}\n    <p>近くの記事は見つかりませんでした。</p>\n  {% endif %}\n\n  <div class=\"acms-cssgrid acms-g-cols-1 acms-g-cols-md-3\">\n    {% for item in entryGeoList.items %}\n    <div>\n      <div class=\"acms-summary\">\n        <div class=\"acms-summary-image\">\n          {% if item.mainImage.path %}\n            <img\n              src=\"{{ item.mainImage.path | resizeImg(100,100) }}\"\n              alt=\"{{ item.alt }}\"\n              width=\"100\"\n              height=\"100\"\n              loading=\"lazy\"\n              decoding=\"async\"\n            >\n          {% else %}\n            <img src=\"/images/default/noimage.gif\" alt=\"noimage\" width=\"100\" loading=\"lazy\" decoding=\"async\" />\n          {% endif %}\n        </div>\n        <div class=\"acms-summary-body\">\n          <h3>{{ item.title }}</h3>\n          <p>{{ item.summary }}</p>\n          <p>{{ item.geo.distance | number_format }}m</p>\n          <p><a href=\"{{ item.url }}\" class=\"acms-btn\">詳細をみる</a></p>\n        </div>\n      </div>\n    </div>\n    {% endfor %}\n  </div>\n\n  <!-- ページネーション -->\n  {{\n    include('/include/pagination.twig', {\n      pagination: entryGeoList.pagination,\n    })\n  }}\n</div>",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーIDで絞り込み",
+      "example": "eid: 123",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "page": {
+      "description": "ページ番号（PAGE定数を使用）",
+      "example": "page: PAGE",
+      "type": "integer"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "entryGeoList.moduleInfo": "モジュール情報（設定画面用）",
+    "entryGeoList.hasLocation": "位置情報が取得できたかどうかのフラグ",
+    "entryGeoList.items": "エントリーの配列（距離順にソート）",
+    "entryGeoList.pagination": "ページネーション情報",
+    "item.title": "エントリーのタイトル",
+    "item.summary": "エントリーの要約",
+    "item.url": "エントリーのURL",
+    "item.mainImage.path": "メイン画像のパス",
+    "item.alt": "画像の代替テキスト",
+    "item.geo.distance": "現在位置からの距離（メートル単位）"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_GeoList'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-geo-list'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "このモジュールは位置情報（ジオロケーション）に基づいてエントリーを取得します",
+    "entryGeoList.hasLocation で位置情報が取得できたかどうかを判定できます",
+    "item.geo.distance は現在位置からの距離（メートル単位）で、number_format フィルターで数値フォーマットできます",
+    "エントリーは距離の近い順にソートされます",
+    "ブラウザの位置情報APIを使用するため、HTTPS環境またはlocalhostでのみ動作します"
+  ]
+}
+

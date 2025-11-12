@@ -1,0 +1,69 @@
+{
+  "name": "V2_Entry_TagRelational",
+  "description": "指定したエントリーと同じタグを持つ関連エントリーを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、現在のエントリーと同じタグを持つ他のエントリーを一覧形式で取得・表示できます。関連記事の表示などで使用できます。",
+  "snippet": "{% set entryTagRelational = module('V2_Entry_TagRelational', null, {\n  bid: null,\n  cid: null,\n  eid: EID,\n  limit: null,\n  keyword: null,\n  field: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n{% if entryTagRelational.items %}\n<div class=\"acms-margin-bottom-medium\">\n  {{ include('/admin/module/setting.twig', { moduleInfo: entryTagRelational.moduleInfo }) }}\n  <div class=\"acms-cssgrid acms-g-cols-1 acms-g-cols-md-3\">\n    {% for entry in entryTagRelational.items %}\n    <div>\n      <div class=\"acms-thumbnail\">\n        {% if entry.mainImage.path %}\n          <img\n            class=\"acms-img-responsive\"\n            src=\"{{ entry.mainImage.path|resizeImg(360) }}\"\n            alt=\"{{ entry.mainImage.alt }}\"\n            width={{ entry.mainImage.width }}\n            height={{ entry.mainImage.height }}\n            loading=\"lazy\"\n            decoding=\"async\"\n          />\n        {% else %}\n          <img class=\"acms-img-responsive\" src=\"/images/noimage.png\" alt=\"\" loading=\"lazy\" decoding=\"async\" />\n        {% endif %}\n        <div>\n          <h3>{{ entry.title }}</h3>\n          <p>{{ entry.summary }}</p>\n          <p><a href=\"{url}\" class=\"acms-btn acms-btn-primary\" role=\"button\">詳細をみる</a></p>\n        </div>\n      </div>\n    </div>\n    {% endfor %}\n  </div>\n</div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "eid": {
+      "description": "エントリーID（EID定数を使用すると現在のエントリー）",
+      "example": "eid: EID",
+      "type": "integer|null"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 6",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "entryTagRelational.moduleInfo": "モジュール情報（設定画面用）",
+    "entryTagRelational.items": "関連エントリーの配列",
+    "entry.title": "エントリーのタイトル",
+    "entry.summary": "エントリーの要約",
+    "entry.url": "エントリーのURL",
+    "entry.mainImage.path": "メイン画像のパス",
+    "entry.mainImage.alt": "メイン画像の代替テキスト",
+    "entry.mainImage.width": "メイン画像の幅",
+    "entry.mainImage.height": "メイン画像の高さ"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Entry_TagRelational'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'entry-tag-relational'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "eid パラメータに EID 定数を指定すると、現在表示中のエントリーと同じタグを持つ関連エントリーを取得します",
+    "指定したエントリーと同じタグを持つ他のエントリーが自動的に検索され、関連記事として表示されます",
+    "現在のエントリー自体は結果に含まれません"
+  ]
+}
+

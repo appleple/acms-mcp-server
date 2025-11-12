@@ -1,0 +1,88 @@
+{
+  "name": "V2_Category_EntrySummary",
+  "description": "カテゴリーごとにエントリーをグループ化して取得・表示するモジュール（V2版）です。Twigテンプレート形式で、指定した条件に一致するカテゴリーを階層構造で取得し、各カテゴリーに属するエントリーを一覧表示できます。マクロを使用して再帰的にカテゴリーとエントリーを表示します。",
+  "snippet": "{% set categoryEntrySummary = module('V2_Category_EntrySummary', null, {\n  bid: null,\n  cid: null,\n  uid: null,\n  limit: null,\n  keyword: null,\n  tag: [],\n  field: null,\n  order: null,\n  start: '1000-01-01 00:00:00',\n  end: '9999-12-31 23:59:59'\n}) %}\n\n{% if categoryEntrySummary.items is not empty %}\n  {% macro renderCategories(categories) %}\n      <div>\n        {% for category in categories %}\n          <h3 class=\"acms-heading\">\n            <a href=\"{{ category.url }}\">{{ category.name }}（{{ category.depth }}階層）</a>\n          </h3>\n          <div class=\"acms-cssgrid acms-g-cols-1 acms-g-cols-md-3\">\n            {% for entry in category.entries %}\n              <div>\n                <a class=\"acms-thumbnail\" href=\"{{ entry.url }}\">\n                  {% if entry.mainImage %}\n                  <img\n                    src=\"{{ entry.mainImage.path|resizeImg(300) }}\"\n                    alt=\"{{ entry.mainImage.alt }}\"\n                    class=\"acms-img-responsive\"\n                    width=\"{{ entry.mainImage.width }}\"\n                    height=\"{{ entry.mainImage.height }}\"\n                    loading=\"lazy\"\n                    decoding=\"async\"\n                  >\n                  {% else %}\n                  <img\n                    src=\"/images/default/noimage.gif\"\n                    alt=\"\"\n                    class=\"acms-img-responsive\"\n                    width=\"{noImgX}\"\n                    height=\"{noImgY}\"\n                    loading=\"lazy\"\n                    decoding=\"async\"\n                  >\n                  {% endif %}\n                  <h4>{{ entry.title }}</h4>\n                  <p>{{ entry.summary }}</p>\n                </a>\n              </div>\n            {% endfor %}\n          </div>\n          {% if category.children is defined %}\n            {{ _self.renderCategories(category.children) }}\n          {% endif %}\n        {% endfor %}\n      </div>\n    {% endmacro %}\n\n    <div class=\"acms-margin-bottom-medium\">\n      {{ include('/admin/module/setting.twig', { moduleInfo: categoryEntrySummary.moduleInfo }) }}\n      {{ _self.renderCategories(categoryEntrySummary.items) }}\n    </div>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    },
+    "cid": {
+      "description": "カテゴリーIDで絞り込み",
+      "example": "cid: 10",
+      "type": "integer|null"
+    },
+    "uid": {
+      "description": "ユーザーIDで絞り込み",
+      "example": "uid: 5",
+      "type": "integer|null"
+    },
+    "limit": {
+      "description": "取得件数（nullの場合はデフォルト値）",
+      "example": "limit: 10",
+      "type": "integer|null"
+    },
+    "keyword": {
+      "description": "キーワード検索",
+      "example": "keyword: '検索キーワード'",
+      "type": "string|null"
+    },
+    "tag": {
+      "description": "タグで絞り込み（配列形式）",
+      "example": "tag: ['news', 'update']",
+      "type": "array"
+    },
+    "field": {
+      "description": "カスタムフィールドで絞り込み",
+      "example": "field: 'field_name/value'",
+      "type": "string|null"
+    },
+    "order": {
+      "description": "並び順（例: 'datetime-desc', 'datetime-asc'）",
+      "example": "order: 'datetime-desc'",
+      "type": "string|null"
+    },
+    "start": {
+      "description": "開始日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "start: '2024-01-01 00:00:00'",
+      "type": "string"
+    },
+    "end": {
+      "description": "終了日時（YYYY-MM-DD HH:MM:SS形式）",
+      "example": "end: '2024-12-31 23:59:59'",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "categoryEntrySummary.moduleInfo": "モジュール情報（設定画面用）",
+    "categoryEntrySummary.items": "カテゴリーの配列（階層構造、各カテゴリーにエントリーが含まれる）",
+    "category.name": "カテゴリー名",
+    "category.url": "カテゴリーのURL",
+    "category.depth": "カテゴリーの階層深度",
+    "category.entries": "そのカテゴリーに属するエントリーの配列",
+    "category.children": "子カテゴリーの配列（存在する場合）",
+    "entry.title": "エントリーのタイトル",
+    "entry.summary": "エントリーの要約",
+    "entry.url": "エントリーのURL",
+    "entry.mainImage.path": "メイン画像のパス",
+    "entry.mainImage.alt": "メイン画像の代替テキスト",
+    "entry.mainImage.width": "メイン画像の幅",
+    "entry.mainImage.height": "メイン画像の高さ"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Category_EntrySummary'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'category-entry-summary'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "カテゴリーは階層構造（ツリー）で取得され、各カテゴリーに属するエントリーが含まれます",
+    "マクロ（macro）を使用して再帰的にカテゴリーとエントリーを表示します",
+    "category.entries でそのカテゴリーに属するエントリーの配列にアクセスできます",
+    "category.children が定義されている場合、子カテゴリーが存在します",
+    "_self.renderCategories() でマクロを再帰的に呼び出し、階層構造を表示します",
+    "category.depth でカテゴリーの階層深度（何階層目か）を表示できます",
+    "{noImgX} と {noImgY} は実際の数値に置き換えてください"
+  ]
+}
+

@@ -1,0 +1,36 @@
+{
+  "name": "V2_Blog_Field",
+  "description": "ブログのカスタムフィールドを取得・表示するモジュール（V2版）です。Twigテンプレート形式で、ブログに設定されたカスタムフィールドの値を取得できます。単一値、複数値（チェックボックスなど）、メディア画像、カスタムフィールドグループに対応しています。",
+  "snippet": "{% set blogField = module('V2_Blog_Field', null, {\n  bid: null,\n}) %}\n\n<!-- 値が１つのフィールド -->\n{% if blogField.fields.hoge.value %}\n<p>{{ blogField.fields.hoge.value }}</p>\n{% endif %}\n\n<!-- チェックボックスなどの複数の値を持つフィールド -->\n{% if blogField.fields.hoge.array %}\n  {% for item in blogField.fields.hoge.array %}\n    {{ item }}\n    {% if not loop.last %}\n    &nbsp;|&nbsp;\n    {% endif %}\n  {% endfor %}\n{% endif %}\n\n<!-- メディア画像 -->\n{% if blogField.fields.hoge.value %}\n  {% set image = blogField.fields.hoge.value %}\n  <img\n    src=\"{{ image.path|resizeImg(640) }}\"\n    width=\"640\"\n    height=\"{{ image.ratio|getHeightFromRatio(640) }}\"\n    alt=\"{{ image.alt }}\"\n  />\n  {% if image.caption %}\n  <caption>{{ image.caption }}</caption>\n  {% endif %}\n{% endif %}\n\n<!-- カスタムフィールドグループ -->\n{% if blogField.fields.hogeGroup %}\n  <ul>\n    {% for item in blogField.fields.hogeGroup %}\n      <li>\n        {% if item.hogeImage %}\n          <img\n            src=\"{{ item.hogeImage.path|resizeImg(640) }}\"\n            width=\"640\"\n            height=\"{{ item.hogeImage.ratio|getHeightFromRatio(640) }}\"\n            alt=\"{{ item.hogeImage.alt }}\"\n          />\n        {% endif %}\n        {% if item.hogeText %}\n          <p>{{ item.hogeText }}</p>\n        {% endif %}\n      </li>\n    {% endfor %}\n  </ul>\n{% endif %}",
+  "parameters": {
+    "bid": {
+      "description": "ブログID（nullの場合は現在のブログ）",
+      "example": "bid: 1",
+      "type": "integer|null"
+    }
+  },
+  "variables": {
+    "blogField.fields": "カスタムフィールドのオブジェクト",
+    "blogField.fields.hoge.value": "単一値のフィールド値",
+    "blogField.fields.hoge.array": "複数値のフィールド配列（チェックボックスなど）",
+    "image.path": "メディア画像のパス",
+    "image.ratio": "メディア画像のアスペクト比",
+    "image.alt": "メディア画像の代替テキスト",
+    "image.caption": "メディア画像のキャプション",
+    "blogField.fields.hogeGroup": "カスタムフィールドグループの配列",
+    "item.hogeImage": "グループ内の画像フィールド",
+    "item.hogeText": "グループ内のテキストフィールド"
+  },
+  "notes": [
+    "Twigテンプレート形式で記述します",
+    "module()関数の第1引数にはモジュール名（V2から始まるもの）を指定します（例: 'V2_Blog_Field'）。これは固定値で、モジュールIDとは異なります。cms_modulesで取得したnameフィールドの値を使用します。",
+    "module()関数の第2引数にはモジュールID（identifier）を指定します（例: 'test2', 'blog-field'）。acms_modulesで取得したidentifierフィールドの値を使用します。",
+    "module()関数の第3引数にパラメータをオブジェクト形式で渡します",
+    "重要: module('モジュール名', 'モジュールID', {パラメータ}) の順序です。モジュールIDを第1引数にしないでください。",
+    "フィールド名（例: 'hoge', 'hogeGroup'）は実際のカスタムフィールド名に置き換えてください",
+    "単一値フィールドは .value でアクセスします",
+    "複数値フィールド（チェックボックスなど）は .array でアクセスします",
+    "メディア画像フィールドは .value で取得し、path, ratio, alt, caption などのプロパティにアクセスできます",
+    "カスタムフィールドグループは配列として取得でき、各アイテム内のフィールドにアクセスできます"
+  ]
+}
