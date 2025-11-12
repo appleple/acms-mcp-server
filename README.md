@@ -32,7 +32,7 @@ MCPサーバーがアクセスするためのAPIエンドポイントを作成�
 
 #### モジュールID一覧取得API
 
-**McpModuleApi 拡張アプリ** が必要です。別途インストールしてください。
+[McpModuleApi 拡張アプリ](https://github.com/appleple/acms-mcp-module-api) が必要です。別途インストールしてください。
 
 - **モジュール名**: V2_ModuleMeta_Index
 - **モジュールID**: mcp_modules
@@ -41,7 +41,7 @@ MCPサーバーがアクセスするためのAPIエンドポイントを作成�
 
 #### モジュールID詳細取得API
 
-**McpModuleApi 拡張アプリ** が必要です。別途インストールしてください。
+[McpModuleApi 拡張アプリ](https://github.com/appleple/acms-mcp-module-api) が必要です。別途インストールしてください。
 
 - **モジュール名**: V2_ModuleMeta_Detail
 - **モジュールID**: mcp_module_detail
