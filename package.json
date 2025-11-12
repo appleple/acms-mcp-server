@@ -1,12 +1,13 @@
 {
   "name": "acms-mcp-server",
   "version": "0.1.0-beta.1",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "type": "module",
   "bin": {
-    "acms-mcp-server": "./src/index.ts"
+    "acms-mcp-server": "./dist/index.js"
   },
   "scripts": {
+    "build": "tsc && sed -i '' '1s|#!/usr/bin/env tsx|#!/usr/bin/env node|' dist/index.js",
     "dev": "tsx src/index.ts",
     "test:find": "tsx src/test-find.ts",
     "format": "prettier --write .",
