@@ -11,4 +11,5 @@ registerAllTools(server);
 // stdioでクライアントと接続（Claude DesktopやCursor等）
 const transport = new StdioServerTransport();
 await server.connect(transport);
+process.stdin.resume();
 //# sourceMappingURL=index.js.map
