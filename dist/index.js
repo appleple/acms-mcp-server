@@ -12,4 +12,5 @@ registerAllTools(server);
 const transport = new StdioServerTransport();
 await server.connect(transport);
 process.stdin.resume();
+await new Promise(() => {});
 //# sourceMappingURL=index.js.map
